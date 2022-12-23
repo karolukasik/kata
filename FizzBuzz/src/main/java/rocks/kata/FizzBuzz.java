@@ -5,5 +5,14 @@ public class FizzBuzz {
         
     }
 
+    public String returnFizzBuzzOrNumber(int index) {
+        StringBuilder toReturn = new StringBuilder();
+        if(index % 3 == 0){
+            toReturn.append("Fizz");
+        }
+        return toReturn.toString();
+    }
+
     
+
 }

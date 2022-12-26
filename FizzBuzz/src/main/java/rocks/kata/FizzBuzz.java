@@ -1,13 +1,12 @@
 package rocks.kata;
 
-import java.util.stream.IntStream;
+import java.util.ArrayList;
 
 public class FizzBuzz {
+    static FizzBuzz fizz = new FizzBuzz();
+
     public static void main(String[] args) {
-        FizzBuzz fizz = new FizzBuzz();
-        String[] linesToPrint = new String[100];
-        IntStream.range(1, linesToPrint.length + 1).forEach(i -> linesToPrint[i - 1] = fizz.returnFizzBuzzOrNumber(i));
-        fizz.printLines(linesToPrint);
+        fizz.printLines(100);
     }
 
     public String returnFizzBuzzOrNumber(int number) {
@@ -24,10 +23,19 @@ public class FizzBuzz {
         return toReturn.toString();
     }
 
-    public void printLines(String[] array) {
-        for (String line : array) {
+    public void printLines(int numberOfLines) {
+        ArrayList<String> lines = createArrayListWithLines(numberOfLines);
+        for (String line : lines) {
             System.out.println(line);
         }
+    }
+
+    public ArrayList<String> createArrayListWithLines(int numberOfLines) {
+        ArrayList<String> lines = new ArrayList<>();
+        for (int i = 1; i <= numberOfLines; i++) {
+            lines.add(fizz.returnFizzBuzzOrNumber(i));
+        }
+        return lines;
     }
 
 }

@@ -9,7 +9,7 @@ public class FizzBuzzTest {
     private FizzBuzz fizz = new FizzBuzz();
 
     @Test
-    public void ifDividedByThreeReturnFizz() {
+    public void ifDivisibleByThreeReturnFizz() {
         String checkNumberSix = fizz.returnFizzBuzzOrNumber(6);
         String checkNumberNine = fizz.returnFizzBuzzOrNumber(9);
 

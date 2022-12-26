@@ -1,26 +1,36 @@
 package rocks.kata;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FizzBuzz {
     static FizzBuzz fizz = new FizzBuzz();
+    HashMap<String, String> pattern;
+
+    public FizzBuzz() {
+        this.pattern = new HashMap<>(3);
+        this.pattern.put("0_", "Fizz");
+        this.pattern.put("_0", "Buzz");
+        this.pattern.put("00", "FizzBuzz");
+    }
 
     public static void main(String[] args) {
         fizz.printLines(100);
     }
 
     public String returnFizzBuzzOrNumber(int number) {
-        StringBuilder toReturn = new StringBuilder();
-        if (number % 3 == 0) {
-            toReturn.append("Fizz");
+        String pattern = createPatternFromNumber(number);
+        switch (pattern) {
+            case "0_":
+                return "Fizz";
+            case "_0":
+                return "Buzz";
+            case "00":
+                return "FizzBuzz";
+            default:
+                return Integer.toString(number);
         }
-        if (number % 5 == 0) {
-            toReturn.append("Buzz");
-        }
-        if (toReturn.length() == 0) {
-            toReturn.append(number);
-        }
-        return toReturn.toString();
+
     }
 
     public void printLines(int numberOfLines) {
@@ -30,12 +40,27 @@ public class FizzBuzz {
         }
     }
 
-    public ArrayList<String> createArrayListWithLines(int numberOfLines) {
+    private ArrayList<String> createArrayListWithLines(int numberOfLines) {
         ArrayList<String> lines = new ArrayList<>();
         for (int i = 1; i <= numberOfLines; i++) {
             lines.add(fizz.returnFizzBuzzOrNumber(i));
         }
         return lines;
+    }
+
+    private String createPatternFromNumber(int number) {
+        StringBuilder pattern = new StringBuilder(2);
+        pattern.append(checkDivisibility(number, 3));
+        pattern.append(checkDivisibility(number, 5));
+        return pattern.toString();
+    }
+
+    private String checkDivisibility(int numberToDivide, int divider) {
+        if (numberToDivide % divider == 0) {
+            return "0";
+        } else {
+            return "_";
+        }
     }
 
 }

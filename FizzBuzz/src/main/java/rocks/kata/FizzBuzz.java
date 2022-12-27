@@ -18,7 +18,7 @@ public class FizzBuzz {
         fizz.printLines(100);
     }
 
-    public String returnFizzBuzzOrNumber(int number) {
+    protected String returnFizzBuzzOrNumber(int number) {
         String pattern = createPatternFromNumber(number);
         switch (pattern) {
             case "0_":

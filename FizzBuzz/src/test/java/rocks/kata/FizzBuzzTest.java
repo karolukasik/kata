@@ -20,7 +20,7 @@ public class FizzBuzzTest {
         System.setOut(new PrintStream(outputStreamCaptor));
     }
 
-    private FizzBuzz fizz = new FizzBuzz();
+    private FizzBuzzPattern fizz = new FizzBuzzPattern();
 
     @Test
     public void checkPrintingResultForFirstFifteenLines() {

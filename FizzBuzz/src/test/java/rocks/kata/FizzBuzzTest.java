@@ -9,12 +9,14 @@ public class FizzBuzzTest {
 
     private FizzBuzz fizzPattern = new FizzBuzzPattern();
     private FizzBuzz fizzStringBuilder = new FizzBuzzStringBuilder();
+    private FizzBuzz fizzStream = new FizzBuzzLiterals();
 
     @ParameterizedTest
     @ValueSource(ints = { 3, 12, 3 * 100003 })
     void shouldReturnFizzForNumbersDivisibleByThree(int number) {
         assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals("Fizz"));
         assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals("Fizz"));
+        assertTrue(fizzStream.returnFizzBuzzOrNumber(number).equals("Fizz"));
     }
 
     @ParameterizedTest
@@ -22,6 +24,7 @@ public class FizzBuzzTest {
     void shouldReturnBuzzWhenDivisibleByFive(int number) {
         assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals("Buzz"));
         assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals("Buzz"));
+        assertTrue(fizzStream.returnFizzBuzzOrNumber(number).equals("Buzz"));
     }
 
     @ParameterizedTest
@@ -29,6 +32,7 @@ public class FizzBuzzTest {
     void shouldReturnFizzBuzzWhenDivisibleByFifteen(int number) {
         assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
         assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
+        assertTrue(fizzStream.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
     }
 
     @ParameterizedTest
@@ -36,6 +40,7 @@ public class FizzBuzzTest {
     void shouldReturnNumberIfNotDivisibleByThreeOrFive(int number) {
         assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals(Integer.toString(number)));
         assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals(Integer.toString(number)));
+        assertTrue(fizzStream.returnFizzBuzzOrNumber(number).equals(Integer.toString(number)));
     }
 
 }

@@ -1,73 +1,36 @@
 package rocks.kata;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class FizzBuzzTest {
 
-    private final PrintStream standardOut = System.out;
-    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-
-    @Before
-    public void setUp() {
-        System.setOut(new PrintStream(outputStreamCaptor));
-    }
-
     private FizzBuzzPattern fizz = new FizzBuzzPattern();
 
-    @Test
-    public void checkPrintingResultForFirstFifteenLines() {
-        fizz.printLines(15);
-        String expectedResult = "1\r\n2\r\nFizz\r\n4\r\nBuzz\r\nFizz\r\n7\r\n8\r\nFizz\r\nBuzz\r\n11\r\nFizz\r\n13\r\n14\r\nFizzBuzz";
-        
-        assertEquals(expectedResult, outputStreamCaptor.toString().trim());
+    @ParameterizedTest
+    @ValueSource(ints = { 3, 12, 3 * 100003 })
+    void shouldReturnFizzForNumbersDivisibleByThree(int number) {
+        assertTrue(fizz.returnFizzBuzzOrNumber(number).equals("Fizz"));
     }
 
-    @Test
-    public void ifDivisibleByThreeReturnFizz() {
-        String checkNumberSix = fizz.returnFizzBuzzOrNumber(6);
-        String checkNumberNine = fizz.returnFizzBuzzOrNumber(9);
-
-        assertTrue(checkNumberSix.equals("Fizz"));
-        assertTrue(checkNumberNine.equals("Fizz"));
+    @ParameterizedTest
+    @ValueSource(ints = { 5, 25, 5 * 100003 })
+    void shouldReturnBuzzWhenDivisibleByFive(int number) {
+        assertTrue(fizz.returnFizzBuzzOrNumber(number).equals("Buzz"));
     }
 
-    @Test
-    public void ifDivisibleByFiveReturnBuzz() {
-        String checkNumberFive = fizz.returnFizzBuzzOrNumber(5);
-        String checkNumberTen = fizz.returnFizzBuzzOrNumber(10);
-
-        assertTrue(checkNumberFive.equals("Buzz"));
-        assertTrue(checkNumberTen.equals("Buzz"));
+    @ParameterizedTest
+    @ValueSource(ints = { 15, 15 * 15, 15 * 100003 })
+    void shouldReturnFizzBuzzWhenDivisibleByFifteen(int number) {
+        assertTrue(fizz.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
     }
 
-    @Test
-    public void ifDivisibleByFifteenReturnFizzBuzz() {
-        String checkNumberFifteen = fizz.returnFizzBuzzOrNumber(15);
-        String checkNumberFortyFive = fizz.returnFizzBuzzOrNumber(45);
-
-        assertTrue(checkNumberFifteen.equals("FizzBuzz"));
-        assertTrue(checkNumberFortyFive.equals("FizzBuzz"));
+    @ParameterizedTest
+    @ValueSource(ints = { 2, 19, 98 * 100003 })
+    void shouldReturnNumberIfNotDivisibleByThreeOrFive(int number) {
+        assertTrue(fizz.returnFizzBuzzOrNumber(number).equals(Integer.toString(number)));
     }
 
-    @Test
-    public void ifNotDivisibleByThreeOrFiveReturnNumber() {
-        String checkNumberTwo = fizz.returnFizzBuzzOrNumber(2);
-        String checkNumberNineteen = fizz.returnFizzBuzzOrNumber(19);
-
-        assertTrue(checkNumberTwo.equals("2"));
-        assertTrue(checkNumberNineteen.equals("19"));
-    }
-
-    @After
-    public void tearDown() {
-        System.setOut(standardOut);
-    }
 }

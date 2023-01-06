@@ -1,10 +1,9 @@
 package rocks.kata;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FizzBuzzPattern {
-    static FizzBuzzPattern fizz = new FizzBuzzPattern();
+public class FizzBuzzPattern implements FizzBuzz {
+
     HashMap<String, String> pattern;
 
     public FizzBuzzPattern() {
@@ -14,49 +13,25 @@ public class FizzBuzzPattern {
         this.pattern.put("00", "FizzBuzz");
     }
 
-    protected String returnFizzBuzzOrNumber(int number) {
-        String pattern = createPatternFromNumber(number);
-        switch (pattern) {
-            case "0_":
-                return "Fizz";
-            case "_0":
-                return "Buzz";
-            case "00":
-                return "FizzBuzz";
-            default:
-                return Integer.toString(number);
-        }
+    public String returnFizzBuzzOrNumber(int number) {
+        String patternForNumber = createPatternFromNumber(number);
 
-    }
-
-    public void printLines(int numberOfLines) {
-        ArrayList<String> lines = createArrayListWithLines(numberOfLines);
-        for (String line : lines) {
-            System.out.println(line);
-        }
-    }
-
-    private ArrayList<String> createArrayListWithLines(int numberOfLines) {
-        ArrayList<String> lines = new ArrayList<>();
-        for (int i = 1; i <= numberOfLines; i++) {
-            lines.add(fizz.returnFizzBuzzOrNumber(i));
-        }
-        return lines;
+        return this.pattern.getOrDefault(patternForNumber, Integer.toString(number));
     }
 
     private String createPatternFromNumber(int number) {
         StringBuilder pattern = new StringBuilder(2);
         pattern.append(checkDivisibility(number, 3));
         pattern.append(checkDivisibility(number, 5));
+
         return pattern.toString();
     }
 
     private String checkDivisibility(int numberToDivide, int divider) {
         if (numberToDivide % divider == 0) {
             return "0";
-        } else {
-            return "_";
         }
+        return "_";
     }
 
 }

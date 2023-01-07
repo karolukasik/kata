@@ -1,12 +1,14 @@
 package rocks.kata;
 
-public class FizzBuzzLauncher {
+public class FizzBuzzPrinter {
     public static void main(String[] args) {
-        FizzBuzz[] fizzs = { new FizzBuzzLiterals(), new FizzBuzzPattern(), new FizzBuzzStringBuilder() };
+        FizzBuzz[] fizzs = { 
+            //new FizzBuzzLiterals(), new FizzBuzzPattern(), new FizzBuzzStringBuilder(), 
+            new FizzBuzzDivisibilityRules() };
 
         for (FizzBuzz fizz : fizzs) {
             System.out.println(fizz.getClass().getSimpleName());
-            printFizzBuzzInLines(fizz, 100);
+            printFizzBuzzInLines(fizz, 15);
             System.out.println("---");
         }
 

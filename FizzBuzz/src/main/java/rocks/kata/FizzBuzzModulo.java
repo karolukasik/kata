@@ -1,10 +1,10 @@
 package rocks.kata;
 
-public class FizzBuzzStringBuilder implements FizzBuzz {
+public class FizzBuzzModulo implements FizzBuzz {
 
     @Override
-    public String returnFizzBuzzOrNumber(int number) {
-        StringBuilder toReturn = new StringBuilder();
+    public String getFizzBuzzOrNumber(int number) {
+        var toReturn = new StringBuilder();
         if (number % 3 == 0) {
             toReturn.append("Fizz");
         }

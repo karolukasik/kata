@@ -13,14 +13,14 @@ public class FizzBuzzPattern implements FizzBuzz {
         this.pattern.put("00", "FizzBuzz");
     }
 
-    public String returnFizzBuzzOrNumber(int number) {
-        String patternForNumber = createPatternFromNumber(number);
+    public String getFizzBuzzOrNumber(int number) {
+        var patternForNumber = createPatternFromNumber(number);
 
-        return this.pattern.getOrDefault(patternForNumber, Integer.toString(number));
+        return pattern.getOrDefault(patternForNumber, Integer.toString(number));
     }
 
     private String createPatternFromNumber(int number) {
-        StringBuilder pattern = new StringBuilder(2);
+        var pattern = new StringBuilder(2);
         pattern.append(checkDivisibility(number, 3));
         pattern.append(checkDivisibility(number, 5));
 

@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class FizzBuzzTest {
 
     private FizzBuzz fizzPattern = new FizzBuzzPattern();
-    private FizzBuzz fizzStringBuilder = new FizzBuzzStringBuilder();
+    private FizzBuzz fizzStringBuilder = new FizzBuzzModulo();
     private FizzBuzz fizzLiterals = new FizzBuzzLiterals();
     private FizzBuzz fizzDivisibilityCheck = new FizzBuzzDivisibilityRules();
 

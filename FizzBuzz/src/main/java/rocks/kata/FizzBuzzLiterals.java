@@ -3,7 +3,7 @@ package rocks.kata;
 public class FizzBuzzLiterals implements FizzBuzz {
 
     @Override
-    public String returnFizzBuzzOrNumber(int number) {
+    public String getFizzBuzzOrNumber(int number) {
 
         if (isNumberDivisible(number, 15)) {
             return "FizzBuzz";

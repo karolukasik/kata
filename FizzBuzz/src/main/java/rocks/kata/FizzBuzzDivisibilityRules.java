@@ -11,10 +11,10 @@ public class FizzBuzzDivisibilityRules implements FizzBuzz {
             DIVISIBLE_BY_15, "FizzBuzz");
 
     @Override
-    public String returnFizzBuzzOrNumber(int number) {
-        DivisibilityStatus checkDivisibilityStatus = checkDivisibility(number);
+    public String getFizzBuzzOrNumber(int number) {
+        var checkDivisibilityStatus = checkDivisibility(number);
 
-        return this.fizzBuzzTranslation.getOrDefault(checkDivisibilityStatus, Integer.toString(number));
+        return fizzBuzzTranslation.getOrDefault(checkDivisibilityStatus, Integer.toString(number));
     }
 
     private DivisibilityStatus checkDivisibility(int number) {
@@ -32,13 +32,15 @@ public class FizzBuzzDivisibilityRules implements FizzBuzz {
     }
 
     private boolean isDivisibleBy3(int number) {
+        // calculate the sum of digits in the given number until it becomes a single
+        // digit
         int helper = number;
         do {
             helper = calculateSumOfDigits(helper);
         } while (helper >= 10);
 
-        int sum = helper;
-        if (sum == 3 || sum == 6 || sum == 9) {
+        int sumOfDigits = helper;
+        if (sumOfDigits == 3 || sumOfDigits == 6 || sumOfDigits == 9) {
             return true;
         }
         return false;

@@ -2,49 +2,132 @@ package rocks.kata;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 public class FizzBuzzTest {
 
-    private FizzBuzz fizzPattern = new FizzBuzzPattern();
-    private FizzBuzz fizzStringBuilder = new FizzBuzzModulo();
-    private FizzBuzz fizzLiterals = new FizzBuzzLiterals();
-    private FizzBuzz fizzDivisibilityCheck = new FizzBuzzDivisibilityRules();
-
-    @ParameterizedTest
-    @ValueSource(ints = { 3, 12, 3 * 100003 })
-    void shouldReturnFizzForNumbersDivisibleByThree(int number) {
-        assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals("Fizz"));
-        assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals("Fizz"));
-        assertTrue(fizzLiterals.returnFizzBuzzOrNumber(number).equals("Fizz"));
-        assertTrue(fizzDivisibilityCheck.returnFizzBuzzOrNumber(number).equals("Fizz"));
+    @TestTemplate
+    @ExtendWith(FizzBuzzBasicTestInvocationContextProvider.class)
+    public void forGivenNumber_ShouldReturnCorrectStringTestTemplate(FizzBuzzTestCase testCase) {
+        String result = testCase.fizzBuzzInstance.getFizzBuzzOrNumber(testCase.number);
+        assertTrue(testCase.expectedResult.equals(result));
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = { 5, 25, 5 * 100003 })
-    void shouldReturnBuzzWhenDivisibleByFive(int number) {
-        assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals("Buzz"));
-        assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals("Buzz"));
-        assertTrue(fizzLiterals.returnFizzBuzzOrNumber(number).equals("Buzz"));
-        assertTrue(fizzDivisibilityCheck.returnFizzBuzzOrNumber(number).equals("Buzz"));
+    static private class FizzBuzzTestCase {
+        private String description;
+        private int number;
+        private FizzBuzz fizzBuzzInstance;
+        private String expectedResult;
+
+        public FizzBuzzTestCase(String description, int number, FizzBuzz fizzBuzzInstance, String expectedResult) {
+            this.description = description;
+            this.number = number;
+            this.fizzBuzzInstance = fizzBuzzInstance;
+            this.expectedResult = expectedResult;
+        }
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = { 15, 15 * 15, 15 * 100003 })
-    void shouldReturnFizzBuzzWhenDivisibleByFifteen(int number) {
-        assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
-        assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
-        assertTrue(fizzLiterals.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
-        assertTrue(fizzDivisibilityCheck.returnFizzBuzzOrNumber(number).equals("FizzBuzz"));
+    static private class FizzBuzzTestCaseParameterResolver implements ParameterResolver {
+
+        private FizzBuzzTestCase testCase;
+
+        private FizzBuzzTestCaseParameterResolver(FizzBuzzTestCase testCase) {
+            this.testCase = testCase;
+        }
+
+        @Override
+        public Object resolveParameter(ParameterContext arg0, ExtensionContext arg1)
+                throws ParameterResolutionException {
+
+            return testCase;
+        }
+
+        @Override
+        public boolean supportsParameter(ParameterContext arg0, ExtensionContext arg1)
+                throws ParameterResolutionException {
+
+            return arg0.getParameter().getType() == FizzBuzzTestCase.class;
+        }
+
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = { 2, 19, 98 * 100003 })
-    void shouldReturnNumberIfNotDivisibleByThreeOrFive(int number) {
-        assertTrue(fizzPattern.returnFizzBuzzOrNumber(number).equals(Integer.toString(number)));
-        assertTrue(fizzStringBuilder.returnFizzBuzzOrNumber(number).equals(Integer.toString(number)));
-        assertTrue(fizzLiterals.returnFizzBuzzOrNumber(number).equals(Integer.toString(number)));
+    static private class FizzBuzzBasicTestInvocationContextProvider implements TestTemplateInvocationContextProvider {
+
+        @Override
+        public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+                ExtensionContext extensionContext) {
+
+            List<FizzBuzzTestCase> testCases = createTestCases();
+
+            return testCases.stream().map(testCase -> new TestTemplateInvocationContext() {
+                @Override
+                public String getDisplayName(int invocationIndex) {
+                    return testCase.description;
+                }
+
+                @Override
+                public List<Extension> getAdditionalExtensions() {
+                    return Arrays.asList(
+                            new FizzBuzzTestCaseParameterResolver(testCase));
+                }
+            });
+
+        }
+
+        private List<FizzBuzzTestCase> createTestCases() {
+            List<FizzBuzz> listOfFizzBuzzObjects = Arrays.asList(new FizzBuzzDivisibilityRules(),
+                    new FizzBuzzLiterals(), new FizzBuzzModulo(), new FizzBuzzPattern());
+            List<Integer> listOfNumbersDivisibleBy3 = Arrays.asList(3, 12, 3 * 100003);
+            List<Integer> listOfNumbersDivisibleBy5 = Arrays.asList(5, 25, 5 * 100003);
+            List<Integer> listOfNumbersDivisibleBy15 = Arrays.asList(15, 15 * 15, 15 * 100003);
+            List<Integer> listOfNumbersNotDivisibleBy3or5 = Arrays.asList(2, 19, 100003);
+
+            List<FizzBuzzTestCase> testCases = new ArrayList<>();
+
+            for (FizzBuzz fizzBuzzObject : listOfFizzBuzzObjects) {
+                for (int number : listOfNumbersDivisibleBy3) {
+                    testCases.add(new FizzBuzzTestCase(
+                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
+                            fizzBuzzObject, "Fizz"));
+                }
+                for (int number : listOfNumbersDivisibleBy5) {
+                    testCases.add(new FizzBuzzTestCase(
+                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
+                            fizzBuzzObject, "Buzz"));
+                }
+                for (int number : listOfNumbersDivisibleBy15) {
+                    testCases.add(new FizzBuzzTestCase(
+                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
+                            fizzBuzzObject, "FizzBuzz"));
+                }
+                for (int number : listOfNumbersNotDivisibleBy3or5) {
+                    testCases.add(new FizzBuzzTestCase(
+                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
+                            fizzBuzzObject, Integer.toString(number)));
+                }
+
+            }
+            return testCases;
+        }
+
+        @Override
+        public boolean supportsTestTemplate(ExtensionContext arg0) {
+            return true;
+        }
+
     }
 
 }

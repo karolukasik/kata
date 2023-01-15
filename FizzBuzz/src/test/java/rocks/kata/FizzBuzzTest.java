@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -20,23 +21,71 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 public class FizzBuzzTest {
 
     @TestTemplate
-    @ExtendWith(FizzBuzzBasicTestInvocationContextProvider.class)
-    public void forGivenNumber_ShouldReturnCorrectStringTestTemplate(FizzBuzzTestCase testCase) {
-        String result = testCase.fizzBuzzInstance.getFizzBuzzOrNumber(testCase.number);
+    @ExtendWith(FizzBuzzTestInvocationContextProvider.class)
+    public void FizzBuzzTestTemplate(FizzBuzzTestCase testCase) {
+        // Test checking if method getFizzBuzzOrNumber returns correct String for given
+        // number
+        String result = testCase.fizzBuzzInstance.getFizzBuzzOrNumber(testCase.testedNumber);
         assertTrue(testCase.expectedResult.equals(result));
     }
 
     static private class FizzBuzzTestCase {
         private String description;
-        private int number;
+        private int testedNumber;
         private FizzBuzz fizzBuzzInstance;
         private String expectedResult;
 
-        public FizzBuzzTestCase(String description, int number, FizzBuzz fizzBuzzInstance, String expectedResult) {
+        public FizzBuzzTestCase(String description, int testedNumber, FizzBuzz fizzBuzzInstance,
+                String expectedResult) {
             this.description = description;
-            this.number = number;
+            this.testedNumber = testedNumber;
             this.fizzBuzzInstance = fizzBuzzInstance;
             this.expectedResult = expectedResult;
+        }
+
+    }
+
+    static private class FizzBuzzTestCasesFactory {
+
+        private static List<FizzBuzzTestCase> createTestCases() {
+            List<FizzBuzz> listOfFizzBuzzObjects = Arrays.asList(
+                    new FizzBuzzDivisibilityRules(),
+                    new FizzBuzzLiterals(),
+                    new FizzBuzzModulo(),
+                    new FizzBuzzPattern());
+            List<Integer> listOfNumbersDivisibleBy3 = Arrays.asList(3, 12, 3 * 100003);
+            List<Integer> listOfNumbersDivisibleBy5 = Arrays.asList(5, 25, 5 * 100003);
+            List<Integer> listOfNumbersDivisibleBy15 = Arrays.asList(15, 15 * 15, 15 * 100003);
+            List<Integer> listOfNumbersNotDivisibleBy3or5 = Arrays.asList(2, 19, 100003);
+
+            List<FizzBuzzTestCase> testCases = new ArrayList<>();
+
+            for (FizzBuzz fizzBuzzObject : listOfFizzBuzzObjects) {
+                for (int number : listOfNumbersDivisibleBy3) {
+                    testCases.add(createFizzBuzzTestCase(number, fizzBuzzObject, "Fizz"));
+                }
+                for (int number : listOfNumbersDivisibleBy5) {
+                    testCases.add(createFizzBuzzTestCase(number, fizzBuzzObject, "Buzz"));
+                }
+                for (int number : listOfNumbersDivisibleBy15) {
+                    testCases.add(createFizzBuzzTestCase(number, fizzBuzzObject, "FizzBuzz"));
+                }
+                for (int number : listOfNumbersNotDivisibleBy3or5) {
+                    testCases.add(createFizzBuzzTestCase(number, fizzBuzzObject, Integer.toString(number)));
+                }
+
+            }
+            return testCases;
+        }
+
+        private static FizzBuzzTestCase createFizzBuzzTestCase(int number, FizzBuzz fizzBuzzInstance,
+                String expectedResult) {
+            return new FizzBuzzTestCase(generateTestDescription(fizzBuzzInstance, number), number, fizzBuzzInstance,
+                    expectedResult);
+        }
+
+        private static String generateTestDescription(FizzBuzz fizzBuzzObject, int number) {
+            return "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number;
         }
     }
 
@@ -64,13 +113,18 @@ public class FizzBuzzTest {
 
     }
 
-    static private class FizzBuzzBasicTestInvocationContextProvider implements TestTemplateInvocationContextProvider {
+    static private class FizzBuzzTestInvocationContextProvider implements TestTemplateInvocationContextProvider {
+
+        @Override
+        public boolean supportsTestTemplate(ExtensionContext arg0) {
+            return true;
+        }
 
         @Override
         public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
                 ExtensionContext extensionContext) {
 
-            List<FizzBuzzTestCase> testCases = createTestCases();
+            List<FizzBuzzTestCase> testCases = FizzBuzzTestCasesFactory.createTestCases();
 
             return testCases.stream().map(testCase -> new TestTemplateInvocationContext() {
                 @Override
@@ -85,47 +139,6 @@ public class FizzBuzzTest {
                 }
             });
 
-        }
-
-        private List<FizzBuzzTestCase> createTestCases() {
-            List<FizzBuzz> listOfFizzBuzzObjects = Arrays.asList(new FizzBuzzDivisibilityRules(),
-                    new FizzBuzzLiterals(), new FizzBuzzModulo(), new FizzBuzzPattern());
-            List<Integer> listOfNumbersDivisibleBy3 = Arrays.asList(3, 12, 3 * 100003);
-            List<Integer> listOfNumbersDivisibleBy5 = Arrays.asList(5, 25, 5 * 100003);
-            List<Integer> listOfNumbersDivisibleBy15 = Arrays.asList(15, 15 * 15, 15 * 100003);
-            List<Integer> listOfNumbersNotDivisibleBy3or5 = Arrays.asList(2, 19, 100003);
-
-            List<FizzBuzzTestCase> testCases = new ArrayList<>();
-
-            for (FizzBuzz fizzBuzzObject : listOfFizzBuzzObjects) {
-                for (int number : listOfNumbersDivisibleBy3) {
-                    testCases.add(new FizzBuzzTestCase(
-                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
-                            fizzBuzzObject, "Fizz"));
-                }
-                for (int number : listOfNumbersDivisibleBy5) {
-                    testCases.add(new FizzBuzzTestCase(
-                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
-                            fizzBuzzObject, "Buzz"));
-                }
-                for (int number : listOfNumbersDivisibleBy15) {
-                    testCases.add(new FizzBuzzTestCase(
-                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
-                            fizzBuzzObject, "FizzBuzz"));
-                }
-                for (int number : listOfNumbersNotDivisibleBy3or5) {
-                    testCases.add(new FizzBuzzTestCase(
-                            "Object " + fizzBuzzObject.getClass().getSimpleName() + " and number " + number, number,
-                            fizzBuzzObject, Integer.toString(number)));
-                }
-
-            }
-            return testCases;
-        }
-
-        @Override
-        public boolean supportsTestTemplate(ExtensionContext arg0) {
-            return true;
         }
 
     }

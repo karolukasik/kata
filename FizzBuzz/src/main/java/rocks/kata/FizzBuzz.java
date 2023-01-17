@@ -1,9 +1,6 @@
 package rocks.kata;
 
-public class FizzBuzz {
-    public static void main(String[] args) {
-        
-    }
-
+public interface FizzBuzz {
+    public String getFizzBuzzOrNumber(int number);
     
 }

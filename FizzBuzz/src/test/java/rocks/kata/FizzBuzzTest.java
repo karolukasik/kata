@@ -1,6 +1,6 @@
 package rocks.kata;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,11 +21,10 @@ public class FizzBuzzTest {
 
     @TestTemplate
     @ExtendWith(FizzBuzzTestInvocationContextProvider.class)
-    public void FizzBuzzTestTemplate(FizzBuzzTestCase testCase) {
-        // Test checking if method getFizzBuzzOrNumber returns correct String for given
-        // number
+    public void checkIfMethodGetFizzBuzzOrNumber_ReturnsCorrectStringForGivenNumber(FizzBuzzTestCase testCase) {
+        // FizzBuzzTest
         String result = testCase.fizzBuzzInstance.getFizzBuzzOrNumber(testCase.testedNumber);
-        assertTrue(testCase.expectedResult.equals(result));
+        assertEquals(testCase.expectedResult, result);
     }
 
     static private class FizzBuzzTestCase {
@@ -97,17 +96,17 @@ public class FizzBuzzTest {
         }
 
         @Override
-        public Object resolveParameter(ParameterContext arg0, ExtensionContext arg1)
+        public Object resolveParameter(ParameterContext paramContext, ExtensionContext extensionContext)
                 throws ParameterResolutionException {
 
             return testCase;
         }
 
         @Override
-        public boolean supportsParameter(ParameterContext arg0, ExtensionContext arg1)
+        public boolean supportsParameter(ParameterContext paramContext, ExtensionContext extensionContext)
                 throws ParameterResolutionException {
 
-            return arg0.getParameter().getType() == FizzBuzzTestCase.class;
+            return paramContext.getParameter().getType() == FizzBuzzTestCase.class;
         }
 
     }
@@ -115,7 +114,7 @@ public class FizzBuzzTest {
     static private class FizzBuzzTestInvocationContextProvider implements TestTemplateInvocationContextProvider {
 
         @Override
-        public boolean supportsTestTemplate(ExtensionContext arg0) {
+        public boolean supportsTestTemplate(ExtensionContext extensionContext) {
             return true;
         }
 

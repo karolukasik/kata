@@ -7,13 +7,15 @@ import java.util.Map;
 
 public class AccountOperationsDatabase {
     private Map<Long, List<AccountOperation>> operationsDatabase;
+    private AccountOperationDatabaseFormatter formatter;
 
     public AccountOperationsDatabase() {
         this.operationsDatabase = new HashMap<>();
+        this.formatter = new AccountOperationDatabaseFormatter(this);
     }
 
     public void addOperationToDatabase(long accountID, AccountOperation operation) {
-        if (operationsDatabase.get(accountID) == null) {
+        if (!operationsDatabase.keySet().contains(accountID)) {
             operationsDatabase.put(accountID, new ArrayList<>());
         }
 
@@ -24,5 +26,13 @@ public class AccountOperationsDatabase {
         return operationsDatabase;
     }
 
+    @Override
+    public String toString() {
+        return "Cannot print whole database";
+    }
+
+    public String toString(long accountID) {
+        return formatter.format(accountID);
+    }
 
 }

@@ -2,10 +2,8 @@
 package rocks.kata;
 
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
-@SuppressWarnings("unused")
 public class AccountOperation {
     private CurrentDateProvider dateProvider = new CurrentDateProvider();
 
@@ -19,10 +17,6 @@ public class AccountOperation {
         this.valueOfOperation = valueOfOperation;
         this.accountBalanceAfterOperation = accountBalanceAfterOperation;
         this.dateOfOperation = dateProvider.getCurrentDate();
-    }
-
-    public void addOperation(long accountID, AccountOperation operation, AccountOperationsDatabase database) {
-        database.addOperationToDatabase(accountID, operation);
     }
 
     @Override

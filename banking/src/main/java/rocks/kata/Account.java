@@ -5,7 +5,6 @@ import static rocks.kata.OperationType.*;
 public class Account {
 
     private static long numberOfAccounts;
-    private AccountOperationDatabaseFormatter formatter;
 
     private int balance;
     private long uniqueAccountID;
@@ -15,7 +14,6 @@ public class Account {
         Account.numberOfAccounts++;
         this.balance = 0;
         this.operationsDatabase = operationsDatabase;
-        this.formatter = new AccountOperationDatabaseFormatter(operationsDatabase);
         this.uniqueAccountID = Account.numberOfAccounts;
         operationsDatabase.addOperationToDatabase(uniqueAccountID, new AccountOperation(OPENING, 0, this.balance));
 
@@ -43,7 +41,7 @@ public class Account {
     }
 
     public String printStatement() {
-        return formatter.format(uniqueAccountID);
+        return operationsDatabase.toString(uniqueAccountID);
     }
 
 }

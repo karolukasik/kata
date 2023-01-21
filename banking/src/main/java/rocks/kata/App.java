@@ -21,7 +21,6 @@ public final class App {
         accountTwo.deposit(110);
 
         System.out.println(accountOne.printStatement());
-        System.out.println(accountTwo.printStatement());
 
     }
 }

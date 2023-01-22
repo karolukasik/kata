@@ -5,19 +5,13 @@ import java.util.List;
 import rocks.kata.AccountOperation;
 
 public class AccountOperationDatabaseFormatter {
-    private AccountOperationsDatabase operationDatabase;
 
-    public AccountOperationDatabaseFormatter(AccountOperationsDatabase operationsDatabase) {
-        this.operationDatabase = operationsDatabase;
-    }
-
-    public String createFormattedStringForAccountOperation(long accountID) {
+    public String createFormattedStringForAccountOperations(List<AccountOperation> listOFOperationsForAccount) {
         var toReturn = new StringBuilder();
 
-        List<AccountOperation> listOFOperationsForAccountID = operationDatabase.getOperationsDatabase().get(accountID);
         toReturn.append("Date\t\tAmount\tBalance\n");
-        if(listOFOperationsForAccountID != null){
-            for (AccountOperation operation : listOFOperationsForAccountID) {
+        if (listOFOperationsForAccount != null) {
+            for (AccountOperation operation : listOFOperationsForAccount) {
                 toReturn.append(operation.toString() + "\n");
             }
         }

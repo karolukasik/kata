@@ -11,9 +11,9 @@ public class AccountOperationsDatabase {
     private Map<Long, List<AccountOperation>> operationsDatabase;
     private AccountOperationDatabaseFormatter formatter;
 
-    public AccountOperationsDatabase() {
+    public AccountOperationsDatabase(AccountOperationDatabaseFormatter formatter) {
         this.operationsDatabase = new HashMap<>();
-        this.formatter = new AccountOperationDatabaseFormatter(this);
+        this.formatter = formatter;
     }
 
     public void addOperationToDatabase(long accountID, AccountOperation operation) {
@@ -24,17 +24,14 @@ public class AccountOperationsDatabase {
         operationsDatabase.get(accountID).add(operation);
     }
 
-    protected Map<Long, List<AccountOperation>> getOperationsDatabase() {
-        return operationsDatabase;
-    }
-
     @Override
     public String toString() {
         return "Cannot print whole database";
     }
 
     public String toString(long accountID) {
-        return formatter.createFormattedStringForAccountOperation(accountID);
+        List<AccountOperation> listOfOperationsForAccount = operationsDatabase.get(accountID);
+        return formatter.createFormattedStringForAccountOperations(listOfOperationsForAccount);
     }
 
 }

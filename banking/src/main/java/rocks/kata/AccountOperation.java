@@ -26,9 +26,9 @@ public class AccountOperation {
             case WITHDRAWAL:
                 return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
             case DEPOSIT:
-                return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+                return dateOfOperation + "\t+" + valueOfOperation + "\t" + accountBalanceAfterOperation;
             case OPENING:
-                return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+                return dateOfOperation + "\t" + valueOfOperation + "\t" + accountBalanceAfterOperation;
             default:
                 return "Unknown operation type";
         }

@@ -17,26 +17,24 @@ public class Account {
         this.uniqueAccountID = Account.numberOfAccounts;
         this.balance = 0;
         this.operationsDatabase = operationsDatabase;
-        operationsDatabase.addOperationToDatabase(uniqueAccountID, new AccountOperation(OPENING, 0, this.balance));
+        createAccountOperationAndAddToDatabase(OPENING, 0);
 
     }
 
     public void withdraw(int amount) throws NotEnoughBalanceException {
-        if (amount < 0) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("The transaction value must be positive number");
         }
         if (balance - amount < 0) {
             throw new NotEnoughBalanceException("Insufficient funds on the account");
         }
-        balance -= amount;
         createAccountOperationAndAddToDatabase(WITHDRAWAL, amount);
     }
 
     public void deposit(int amount) {
-        if (amount < 0) {
+        if (amount <= 0) {
             throw new IllegalArgumentException("The transaction value must be positive number");
         }
-        balance += amount;
         createAccountOperationAndAddToDatabase(DEPOSIT, amount);
     }
 
@@ -45,8 +43,23 @@ public class Account {
     }
 
     private void createAccountOperationAndAddToDatabase(OperationType typeOfOperation, int amount) {
+        balance = calculateBalanceAfterOperation(typeOfOperation, amount);
         operationsDatabase.addOperationToDatabase(uniqueAccountID,
                 new AccountOperation(typeOfOperation, amount, balance));
+    }
+
+    private int calculateBalanceAfterOperation(OperationType typeOfOperation, int amount) {
+        switch (typeOfOperation) {
+            case WITHDRAWAL:
+                return balance - amount;
+            case DEPOSIT:
+                return balance + amount;
+            case OPENING:
+                return balance;
+            //Czy jest mozliwosc żeby Java sprawdzała że są tylko 3 enumy zdefiniowane, wiec nie ma potrzeby defaulta?
+            default:
+                 return -1;
+        }
     }
 
 }

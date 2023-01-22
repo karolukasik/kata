@@ -1,5 +1,7 @@
 package rocks.kata;
 
+import rocks.kata.DatabaseClasses.AccountOperationsDatabase;
+
 /**
  * Hello world!
  */
@@ -17,10 +19,10 @@ public final class App {
         accountOne.deposit(150);
         accountTwo.deposit(150);
         accountOne.withdraw(30);
-        accountTwo.withdraw(15);
+        accountTwo.withdraw(10);
         accountTwo.deposit(110);
 
-        System.out.println(accountOne.printStatement());
+        System.out.println(accountTwo.printStatement());
 
     }
 }

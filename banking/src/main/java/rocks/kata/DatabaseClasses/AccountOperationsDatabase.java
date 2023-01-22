@@ -1,9 +1,11 @@
-package rocks.kata;
+package rocks.kata.DatabaseClasses;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import rocks.kata.AccountOperation;
 
 public class AccountOperationsDatabase {
     private Map<Long, List<AccountOperation>> operationsDatabase;
@@ -22,7 +24,7 @@ public class AccountOperationsDatabase {
         operationsDatabase.get(accountID).add(operation);
     }
 
-    public Map<Long, List<AccountOperation>> getOperationsDatabase() {
+    protected Map<Long, List<AccountOperation>> getOperationsDatabase() {
         return operationsDatabase;
     }
 
@@ -32,7 +34,7 @@ public class AccountOperationsDatabase {
     }
 
     public String toString(long accountID) {
-        return formatter.format(accountID);
+        return formatter.createFormattedStringForAccountOperation(accountID);
     }
 
 }

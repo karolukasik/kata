@@ -2,6 +2,8 @@ package rocks.kata;
 
 import static rocks.kata.OperationType.*;
 
+import rocks.kata.DatabaseClasses.AccountOperationsDatabase;
+
 public class Account {
 
     private static long numberOfAccounts;
@@ -12,24 +14,22 @@ public class Account {
 
     public Account(AccountOperationsDatabase operationsDatabase) {
         Account.numberOfAccounts++;
+        this.uniqueAccountID = Account.numberOfAccounts;
         this.balance = 0;
         this.operationsDatabase = operationsDatabase;
-        this.uniqueAccountID = Account.numberOfAccounts;
         operationsDatabase.addOperationToDatabase(uniqueAccountID, new AccountOperation(OPENING, 0, this.balance));
 
     }
 
-    public void withdraw(int amount) {
+    public void withdraw(int amount) throws NotEnoughBalanceException {
         if (amount < 0) {
             throw new IllegalArgumentException("The transaction value must be positive number");
         }
         if (balance - amount < 0) {
-            // find or create new exception
-            System.out.println("Insufficient funds in the account");
-            return;
+            throw new NotEnoughBalanceException("Insufficient funds on the account");
         }
         balance -= amount;
-        operationsDatabase.addOperationToDatabase(uniqueAccountID, new AccountOperation(WITHDRAWAL, amount, balance));
+        createAccountOperationAndAddToDatabase(WITHDRAWAL, amount);
     }
 
     public void deposit(int amount) {
@@ -37,11 +37,16 @@ public class Account {
             throw new IllegalArgumentException("The transaction value must be positive number");
         }
         balance += amount;
-        operationsDatabase.addOperationToDatabase(uniqueAccountID, new AccountOperation(DEPOSIT, amount, balance));
+        createAccountOperationAndAddToDatabase(DEPOSIT, amount);
     }
 
     public String printStatement() {
         return operationsDatabase.toString(uniqueAccountID);
+    }
+
+    private void createAccountOperationAndAddToDatabase(OperationType typeOfOperation, int amount) {
+        operationsDatabase.addOperationToDatabase(uniqueAccountID,
+                new AccountOperation(typeOfOperation, amount, balance));
     }
 
 }

@@ -1,15 +1,12 @@
 
 package rocks.kata;
 
-import lombok.Setter;
-
-@Setter
 public class AccountOperation {
-    private CurrentDateProvider dateProvider = new CurrentDateProvider();
 
     private OperationType typeOfOperation;
     private int valueOfOperation;
     private int accountBalanceAfterOperation;
+    private CurrentDateProvider dateProvider = new CurrentDateProvider();
     private String dateOfOperation;
 
     public AccountOperation(OperationType typeOfOperation, int valueOfOperation, int accountBalanceAfterOperation) {
@@ -21,18 +18,20 @@ public class AccountOperation {
 
     @Override
     public String toString() {
-        if (typeOfOperation == OperationType.WITHDRAWAL) {
-            return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+        return createFormattedStringForAccountOperation();
+    }
 
+    private String createFormattedStringForAccountOperation() {
+        switch (typeOfOperation) {
+            case WITHDRAWAL:
+                return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+            case DEPOSIT:
+                return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+            case OPENING:
+                return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+            default:
+                return "Unknown operation type";
         }
-        if (typeOfOperation == OperationType.DEPOSIT) {
-            return dateOfOperation + "\t+" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-
-        }
-        if (typeOfOperation == OperationType.OPENING) {
-            return dateOfOperation + "\t" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-        }
-        return "";
     }
 
 }

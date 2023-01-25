@@ -17,7 +17,7 @@ public class Account {
         this.uniqueAccountID = Account.numberOfAccounts;
         this.balance = 0;
         this.operationsDatabase = operationsDatabase;
-        createAccountOperationAndAddToDatabase(OPENING, 0);
+        saveOperationToDatabase(OPENING, 0);
 
     }
 
@@ -28,21 +28,21 @@ public class Account {
         if (balance - amount < 0) {
             throw new NotEnoughBalanceException("Insufficient funds on the account");
         }
-        createAccountOperationAndAddToDatabase(WITHDRAWAL, amount);
+        saveOperationToDatabase(WITHDRAWAL, amount);
     }
 
     public void deposit(int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("The transaction value must be positive number");
         }
-        createAccountOperationAndAddToDatabase(DEPOSIT, amount);
+        saveOperationToDatabase(DEPOSIT, amount);
     }
 
     public String printStatement() {
         return operationsDatabase.toString(uniqueAccountID);
     }
 
-    private void createAccountOperationAndAddToDatabase(OperationType typeOfOperation, int amount) {
+    private void saveOperationToDatabase(OperationType typeOfOperation, int amount) {
         balance = calculateBalanceAfterOperation(typeOfOperation, amount);
         operationsDatabase.addOperationToDatabase(uniqueAccountID,
                 new AccountOperation(typeOfOperation, amount, balance));

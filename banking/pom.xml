@@ -4,7 +4,7 @@
   <artifactId>banking</artifactId>
   <version>1.0</version>
 
-  <name>fizzbuzz</name>
+  <name>banking</name>
 
 
   <properties>
@@ -42,8 +42,9 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
       <version>${junit.version}</version>
-  </dependency>
+    </dependency>
   </dependencies>
 
   <build>

@@ -7,18 +7,13 @@ import rocks.kata.DatabaseClasses.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.BeforeEach;
+import java.lang.reflect.Executable;
 
 class AppTest {
 
-    AccountOperationsDatabase database;
-    CurrentDateProvider dateProvider = new CurrentDateProvider();
+    DateProvider dateProvider = new DateProvider("d.M.yyyy");
     AccountOperationDatabaseFormatter formatter = new AccountOperationDatabaseFormatter();
-
-    @BeforeEach
-    void createAccountDatabase() {
-        database = new AccountOperationsDatabase(formatter);
-    }
+    AccountOperationsDatabase database = new AccountOperationsDatabase(formatter);
 
     @Test
     void newlyCreatedAccountShouldResultInCorrectDatabasePrintedStatement() {
@@ -44,6 +39,8 @@ class AppTest {
     @Test
     void depositOperationShouldReturnExceptionWhenAmountIsNegativeNumber() {
         var account = new Account(database);
+        // Executable expression = () -> account.deposit(-1);
+
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             account.deposit(-1);
         });

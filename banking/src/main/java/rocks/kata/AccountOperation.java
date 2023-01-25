@@ -6,7 +6,7 @@ public class AccountOperation {
     private OperationType typeOfOperation;
     private int valueOfOperation;
     private int accountBalanceAfterOperation;
-    private CurrentDateProvider dateProvider = new CurrentDateProvider();
+    private DateProvider dateProvider = new DateProvider("d.M.yyyy");
     private String dateOfOperation;
 
     public AccountOperation(OperationType typeOfOperation, int valueOfOperation, int accountBalanceAfterOperation) {

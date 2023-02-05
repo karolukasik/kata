@@ -17,10 +17,7 @@ public class AccountOperationsDatabase {
     }
 
     public void addOperationToDatabase(long accountID, AccountOperation operation) {
-        if (!operationsDatabase.keySet().contains(accountID)) {
-            operationsDatabase.put(accountID, new ArrayList<>());
-        }
-
+        operationsDatabase.putIfAbsent(accountID, new ArrayList<>());
         operationsDatabase.get(accountID).add(operation);
     }
 

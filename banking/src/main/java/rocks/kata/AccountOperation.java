@@ -22,16 +22,11 @@ public class AccountOperation {
     }
 
     private String createFormattedStringForAccountOperation() {
-        switch (typeOfOperation) {
-            case WITHDRAWAL:
-                return dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-            case DEPOSIT:
-                return dateOfOperation + "\t+" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-            case OPENING:
-                return dateOfOperation + "\t" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-            default:
-                return "Unknown operation type";
-        }
+        return switch (typeOfOperation) {
+            case WITHDRAWAL -> dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+            case DEPOSIT -> dateOfOperation + "\t+" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+            case OPENING -> dateOfOperation + "\t" + valueOfOperation + "\t" + accountBalanceAfterOperation;
+        };
     }
 
 }

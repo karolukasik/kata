@@ -2,20 +2,23 @@ package rocks.kata;
 
 import static rocks.kata.OperationType.*;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
+
 import rocks.kata.DatabaseClasses.AccountOperationsDatabase;
 
 public class Account {
 
-    private static long numberOfAccounts;
+    private static final LongAdder numberOfAccounts = new LongAdder();
 
-    private int balance;
+    private AtomicInteger balance;
     private long uniqueAccountID;
     private AccountOperationsDatabase operationsDatabase;
 
     public Account(AccountOperationsDatabase operationsDatabase) {
-        Account.numberOfAccounts++;
-        this.uniqueAccountID = Account.numberOfAccounts;
-        this.balance = 0;
+        numberOfAccounts.increment();
+        this.uniqueAccountID = numberOfAccounts.sum();
+        this.balance = new AtomicInteger(0);
         this.operationsDatabase = operationsDatabase;
         saveOperationToDatabase(OPENING, 0);
 
@@ -25,7 +28,7 @@ public class Account {
         if (amount <= 0) {
             throw new IllegalArgumentException("The transaction value must be positive number");
         }
-        if (balance - amount < 0) {
+        if (balance.intValue() - amount < 0) {
             throw new NotEnoughBalanceException("Insufficient funds on the account");
         }
         saveOperationToDatabase(WITHDRAWAL, amount);
@@ -43,23 +46,17 @@ public class Account {
     }
 
     private void saveOperationToDatabase(OperationType typeOfOperation, int amount) {
-        balance = calculateBalanceAfterOperation(typeOfOperation, amount);
+        balance.getAndSet(calculateBalanceAfterOperation(typeOfOperation, amount));
         operationsDatabase.addOperationToDatabase(uniqueAccountID,
-                new AccountOperation(typeOfOperation, amount, balance));
+                new AccountOperation(typeOfOperation, amount, balance.get()));
     }
 
     private int calculateBalanceAfterOperation(OperationType typeOfOperation, int amount) {
-        switch (typeOfOperation) {
-            case WITHDRAWAL:
-                return balance - amount;
-            case DEPOSIT:
-                return balance + amount;
-            case OPENING:
-                return balance;
-            //Czy jest mozliwosc żeby Java sprawdzała że są tylko 3 enumy zdefiniowane, wiec nie ma potrzeby defaulta?
-            default:
-                 return -1;
-        }
+        return switch (typeOfOperation) {
+            case WITHDRAWAL -> balance.addAndGet(-amount);
+            case DEPOSIT -> balance.addAndGet(amount);
+            case OPENING -> 0;
+        };
     }
 
 }

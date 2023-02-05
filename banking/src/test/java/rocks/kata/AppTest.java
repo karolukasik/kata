@@ -7,7 +7,7 @@ import rocks.kata.DatabaseClasses.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.lang.reflect.Executable;
+import org.junit.jupiter.api.function.Executable;
 
 class AppTest {
 
@@ -39,28 +39,24 @@ class AppTest {
     @Test
     void depositOperationShouldReturnExceptionWhenAmountIsNegativeNumber() {
         var account = new Account(database);
-        // Executable expression = () -> account.deposit(-1);
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            account.deposit(-1);
-        });
-
         String expectedMessage = "The transaction value must be positive number";
-        String actualMessage = exception.getMessage();
 
+        Executable methodToExecute = () -> account.deposit(-1);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, methodToExecute);
+        String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void depositOperationShouldReturnExceptionWhenAmountIsZero() {
         var account = new Account(database);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            account.deposit(0);
-        });
-
         String expectedMessage = "The transaction value must be positive number";
-        String actualMessage = exception.getMessage();
 
+        Executable methodToExecute = () -> account.deposit(0);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, methodToExecute);
+        String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }
 
@@ -80,41 +76,40 @@ class AppTest {
     @Test
     void withdrawOperationShouldReturnExceptionWhenAmountIsNegativeNumber() {
         var account = new Account(database);
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            account.withdraw(-5);
-        });
-
         String expectedMessage = "The transaction value must be positive number";
-        String actualMessage = exception.getMessage();
 
+        Executable methodToExecute = () -> account.withdraw(-5);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, methodToExecute);
+        String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void withdrawOperationShouldReturnExceptionWhenAmountIsZero() {
         var account = new Account(database);
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            account.withdraw(0);
-        });
-
         String expectedMessage = "The transaction value must be positive number";
-        String actualValue = exception.getMessage();
 
+        Executable methodToExecute = () -> account.withdraw(0);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, methodToExecute);
+        String actualValue = exception.getMessage();
         assertEquals(expectedMessage, actualValue);
     }
 
     @Test
     void withdrawOperationShouldReturnExceptionWhenBalanceIsLessThanAmount() {
         var account = new Account(database);
-        Exception exception = assertThrows(NotEnoughBalanceException.class, () -> {
-            account.withdraw(10);
-        });
-
         String expectedMessage = "Insufficient funds on the account";
-        String actualMessage = exception.getMessage();
 
+        Executable methodToExecute = () -> account.withdraw(10);
+        
+        Exception exception = assertThrows(NotEnoughBalanceException.class, methodToExecute);
+        String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
+        
     }
+    
+
+
 }

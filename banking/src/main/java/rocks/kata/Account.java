@@ -1,10 +1,9 @@
 package rocks.kata;
 
-import static rocks.kata.OperationType.*;
-
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.LongAdder;
 
+import rocks.kata.AccountOperation.OperationType;
 import rocks.kata.DatabaseClasses.AccountOperationsDatabase;
 
 public class Account {
@@ -17,10 +16,10 @@ public class Account {
 
     public Account(AccountOperationsDatabase operationsDatabase) {
         numberOfAccounts.increment();
-        this.uniqueAccountID = numberOfAccounts.sum();
+        this.uniqueAccountID = numberOfAccounts.longValue();
         this.balance = new AtomicInteger(0);
         this.operationsDatabase = operationsDatabase;
-        saveOperationToDatabase(OPENING, 0);
+        saveOperationToDatabase(OperationType.OPENING, 0);
 
     }
 
@@ -31,14 +30,14 @@ public class Account {
         if (balance.intValue() - amount < 0) {
             throw new NotEnoughBalanceException("Insufficient funds on the account");
         }
-        saveOperationToDatabase(WITHDRAWAL, amount);
+        saveOperationToDatabase(OperationType.WITHDRAWAL, amount);
     }
 
     public void deposit(int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("The transaction value must be positive number");
         }
-        saveOperationToDatabase(DEPOSIT, amount);
+        saveOperationToDatabase(OperationType.DEPOSIT, amount);
     }
 
     public String printStatement() {

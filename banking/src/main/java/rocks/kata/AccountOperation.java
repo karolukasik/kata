@@ -3,6 +3,12 @@ package rocks.kata;
 
 public class AccountOperation {
 
+    protected enum OperationType {
+        OPENING,
+        WITHDRAWAL,
+        DEPOSIT;
+    }
+
     private OperationType typeOfOperation;
     private int valueOfOperation;
     private int accountBalanceAfterOperation;

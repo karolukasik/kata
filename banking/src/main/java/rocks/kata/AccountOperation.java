@@ -3,10 +3,21 @@ package rocks.kata;
 
 public class AccountOperation {
 
-    protected enum OperationType {
-        OPENING,
-        WITHDRAWAL,
-        DEPOSIT;
+    enum OperationType {
+        WITHDRAWAL {
+            @Override
+            String createFormattedStringForDatabase(String date, int value, int balance) {
+                return date + "\t-" + value + "\t" + balance;
+            }
+        },
+        DEPOSIT {
+            @Override
+            String createFormattedStringForDatabase(String date, int value, int balance) {
+                return date + "\t+" + value + "\t" + balance;
+            }
+        };
+
+        abstract String createFormattedStringForDatabase(String date, int value, int balance);
     }
 
     private OperationType typeOfOperation;
@@ -24,15 +35,8 @@ public class AccountOperation {
 
     @Override
     public String toString() {
-        return createFormattedStringForAccountOperation();
-    }
-
-    private String createFormattedStringForAccountOperation() {
-        return switch (typeOfOperation) {
-            case WITHDRAWAL -> dateOfOperation + "\t-" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-            case DEPOSIT -> dateOfOperation + "\t+" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-            case OPENING -> dateOfOperation + "\t" + valueOfOperation + "\t" + accountBalanceAfterOperation;
-        };
+        return typeOfOperation.createFormattedStringForDatabase(dateOfOperation, valueOfOperation,
+                accountBalanceAfterOperation);
     }
 
 }

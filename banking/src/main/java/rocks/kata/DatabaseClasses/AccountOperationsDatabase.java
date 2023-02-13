@@ -21,12 +21,7 @@ public class AccountOperationsDatabase {
         operationsDatabase.get(accountID).add(operation);
     }
 
-    @Override
-    public String toString() {
-        return "Cannot print whole database";
-    }
-
-    public String toString(long accountID) {
+    public String formattedAccountOperations(long accountID) {
         List<AccountOperation> listOfOperationsForAccount = operationsDatabase.get(accountID);
         return formatter.createFormattedStringForAccountOperations(listOfOperationsForAccount);
     }

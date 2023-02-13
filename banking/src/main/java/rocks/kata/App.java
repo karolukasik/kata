@@ -2,9 +2,6 @@ package rocks.kata;
 
 import rocks.kata.DatabaseClasses.*;
 
-/**
- * Hello world!
- */
 public final class App {
     private App() {
     }
@@ -15,7 +12,9 @@ public final class App {
 
         var accountOne = new Account(database);
         var accountTwo = new Account(database);
-
+        System.out.println(accountOne.getUniqueAccountID());
+        System.out.println(accountTwo.getUniqueAccountID());
+        
         accountOne.deposit(100);
         accountOne.deposit(150);
         accountOne.withdraw(30);

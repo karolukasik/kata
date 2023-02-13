@@ -18,11 +18,10 @@ class AppTest {
     @Test
     void newlyCreatedAccountShouldResultInCorrectDatabasePrintedStatement() {
         var account = new Account(database);
-        String currentDate = dateProvider.getCurrentDate();
 
         String statement = account.printStatement();
 
-        assertEquals("Date\t\tAmount\tBalance\n" + currentDate + "\t0\t0", statement);
+        assertEquals("Date\t\tAmount\tBalance", statement);
     }
 
     @Test
@@ -33,7 +32,7 @@ class AppTest {
 
         String statement = account.printStatement();
 
-        assertEquals("Date\t\tAmount\tBalance\n" + currentDate + "\t0\t0\n" + currentDate + "\t+100\t100", statement);
+        assertEquals("Date\t\tAmount\tBalance\n" + currentDate + "\t+100\t100", statement);
     }
 
     @Test
@@ -69,7 +68,7 @@ class AppTest {
 
         String statement = account.printStatement();
 
-        assertEquals("Date\t\tAmount\tBalance\n" + currentDate + "\t0\t0\n" + currentDate + "\t+100\t100\n"
+        assertEquals("Date\t\tAmount\tBalance\n" + currentDate + "\t+100\t100\n"
                 + currentDate + "\t-80\t20", statement);
     }
 

@@ -44,9 +44,10 @@ public class Account {
         return operationsDatabase.formattedAccountOperations(uniqueAccountID);
     }
 
-    private void saveOperationToDatabase(OperationType typeOfOperation, int amount) {
-        AccountOperation operation = new AccountOperation(typeOfOperation, amount,
-                calculateBalanceAfterOperation(typeOfOperation, amount));
+    private synchronized void saveOperationToDatabase(OperationType typeOfOperation, int amount) {
+        var balanceAfterOperation = calculateBalanceAfterOperation(typeOfOperation, amount);
+        var operation = new AccountOperation(typeOfOperation, amount,
+                balanceAfterOperation);
         operationsDatabase.addOperationToDatabase(uniqueAccountID, operation);
     }
 
